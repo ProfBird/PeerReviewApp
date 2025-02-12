@@ -1,0 +1,22 @@
+﻿@model Term
+
+@{
+    ViewData["Title"] = "Delete Department";
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">@Model.TermName</h4>
+            <h5>Are you sure you would like to delete the term <strong>@Model.TermName</strong>?</h5>
+
+            <form asp-action="DeleteTerm" method="post">
+                <input type="hidden" asp-for="@Model.TermId" />
+                <input type="hidden" asp-for="@Model.InstitutionId" />
+
+                <button type="submit" class="btn btn-primary">Delete</button>
+                <a asp-controller="Institution" asp-action="Edit" asp-route-id="@Model.InstitutionId" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

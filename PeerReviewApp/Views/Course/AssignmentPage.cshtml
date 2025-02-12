@@ -1,0 +1,232 @@
+﻿@model AssignmentVM
+
+@{
+    ViewData["Title"] = "Assignment - " + Model.AssignmentName;
+}
+
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<AppUser> UserManager;
+
+
+<div class="container">
+    <div>
+        <a asp-controller="Course" asp-action="ClassPage" asp-route-id="@Model.ClassId" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+        <h2 class="fw-light">@Model.AssignmentName</h2>
+        
+    </div>
+</div>
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">Assignment Details</h4>
+
+            <label><strong>Instructions</strong></label><p>@Model.AssignmentInstructions</p>
+            <label><strong>Peer Review Due Date</strong></label><p>@Model.PeerReviewDueDate</p>
+            <label><strong>Final Due Date</strong></label><p>@Model.AssignmentDueDate</p>
+            <label><strong>Peer Review Partner</strong></label>
+            @if (Model.PeerReviewPartner == null)
+            {
+                <p>You do not have a peer review partner for this class.</p>
+            }
+            else
+            {
+                <p>@Model.PeerReviewPartner.FirstName @Model.PeerReviewPartner.LastName</p>
+            }
+            <label><strong>Assignment Template</strong></label>
+            @if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+            {
+                @if (Model.AssignmentTemplate == null)
+                {
+                    <form enctype="multipart/form-data" asp-controller="Course" asp-action="UploadAssignmentTemplate" method="post">
+                        <dl>
+                            <dd>
+                                <input type="hidden" asp-for="AssignmentId" value="@Model.AssignmentId" />
+                                <input type="hidden" asp-for="ClassId" value="@Model.ClassId"/>
+                                <input asp-for="@Model.FormFile" type="file" />
+                                <span asp-validation-for="@Model.FormFile"></span>
+                            </dd>
+                        </dl>
+                        <input class="btn btn-sm btn-primary" type="submit" value="Upload Assignment Template" />
+                    </form>
+                }   
+                else
+                {
+                    <p>@Model.AssignmentTemplate.TemplateName</p>
+                    <a asp-controller="Course" asp-action="DownloadAssignmentTemplate" asp-route-id="@Model.AssignmentTemplate.AssignmentId" asp-route-view="AssignmentPage" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download Assignment Template</a>
+                    <a asp-controller="Course" asp-action="DeleteAssignmentTemplate" asp-route-id="@Model.AssignmentTemplate.AssignmentId" asp-route-view="AssignmentPage" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Delete Assignment Template</a>
+                }
+            }
+            else
+            {
+                @if (Model.AssignmentTemplate == null)
+                {
+                    <p>No assignment template has been uploaded for this assignment.</p>
+                }
+                else
+                {
+                    <p>@Model.AssignmentTemplate.TemplateName</p>
+                    <a asp-controller="Course" asp-action="DownloadAssignmentTemplate" asp-route-id="@Model.AssignmentTemplate.AssignmentId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download Assignment Template</a>
+                }                
+            }
+
+            <br />
+            <br />
+            <label><strong>Peer Review Template</strong></label>
+            @if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+            {
+                @if (Model.PeerReviewTemplate == null)
+                {
+                    <form enctype="multipart/form-data" asp-controller="Course" asp-action="UploadPeerReviewTemplate" method="post">
+                        <dl>
+                            <dd>
+                                <input type="hidden" asp-for="AssignmentId" value="@Model.AssignmentId" />
+                                <input asp-for="@Model.FormFile" type="file" />
+                                <span asp-validation-for="@Model.FormFile"></span>
+                            </dd>
+                        </dl>
+                        <input class="btn btn-sm btn-primary" type="submit" value="Upload Peer Review Template" />
+                    </form>
+                }   
+                else
+                {
+                    <p>@Model.PeerReviewTemplate.TemplateName</p>
+                    <a asp-controller="Course" asp-action="DownloadPeerReviewTemplate" asp-route-id="@Model.PeerReviewTemplate.AssignmentId" asp-route-view="AssignmentPage" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download Peer Review Template</a>
+                    <a asp-controller="Course" asp-action="DeletePeerReviewTemplate" asp-route-id="@Model.PeerReviewTemplate.AssignmentId" asp-route-view="AssignmentPage" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Delete Peer Review Template</a>
+                }                
+            }
+            else
+            {
+                @if (Model.PeerReviewTemplate == null)
+                {
+                    <p>No peer review template has been uploaded for this assignment.</p>
+                }
+                else
+                {
+                    <p>@Model.PeerReviewTemplate.TemplateName</p>
+                    <a asp-controller="Course" asp-action="DownloadPeerReviewTemplate" asp-route-id="@Model.PeerReviewTemplate.AssignmentId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download Peer Review Template</a>
+                }               
+            }
+            <br />
+            <br />
+            @if ((User.IsInRole("Instructor") || User.IsInRole("Admin")) && Model.AssignmentTemplate != null)@*TODO Add assignment submission counter*@
+            {
+                <div>
+                    <p><strong>Download All Student Submitted Assignments</strong></p>
+                    <a asp-controller="ZipFile" asp-action="GenerateAndDownloadZip" asp-route-id="@Model.AssignmentTemplate.AssignmentId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download All Submitted Assignments</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <div class="row">
+                <div class="col-md">
+                    <h4 class="fw-light">Assignment Submission</h4>
+
+                    @if (Model.AssignmentSubmission == null)
+                    {
+                        <form enctype="multipart/form-data" asp-controller="Course" asp-action="SubmitAssignment" method="post">
+                            <dl>
+                                <dd>
+                                    <input type="hidden" asp-for="AssignmentId" value="@Model.AssignmentId" />
+                                    <input asp-for="@Model.FormFile" type="file" />
+                                    <span asp-validation-for="@Model.FormFile"></span>
+                                </dd>
+                            </dl>
+                            <input class="btn btn-sm btn-primary" type="submit" value="Submit Assignment" />
+                        </form>
+                    }
+                    else
+                    {
+                        <p>@Model.AssignmentSubmission.SubmissionName</p>
+                        <a asp-controller="Course" asp-action="DownloadAssignmentSubmission" asp-route-id="@Model.AssignmentSubmission.SubmissionId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download</a>
+                        <a asp-controller="Course" asp-action="DeleteAssignmentSubmission" asp-route-id="@Model.AssignmentSubmission.SubmissionId" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Delete</a>
+                    }
+                </div>
+
+                <div class="col-md">
+                    <h4 class="fw-light">Partner Assignment Submission</h4>
+                    @if (Model.PeerReviewPartner == null)
+                    {
+                        <p>You do not have a peer review partner for this class.</p>
+                    }
+                    else
+                    {
+                        if (Model.PartnerAssignmentSubmission == null)
+                        {
+                            <p>Your partner has not submitted an assignment yet.</p>
+                        }
+                        else
+                        {
+                            <p>@Model.PartnerAssignmentSubmission.SubmissionName</p>
+                            <a asp-controller="Course" asp-action="DownloadAssignmentSubmission" asp-route-id="@Model.PartnerAssignmentSubmission.SubmissionId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <div class="row">
+                <div class="col-md">
+                    <h4 class="fw-light">Peer Review Submission</h4>
+
+                    @if (Model.PeerReviewPartner == null)
+                    {
+                        <p>You do not have a peer review partner for this class.</p>
+                    }
+                    else
+                    {
+                        if (Model.PeerReviewSubmission == null)
+                        {
+                            <form enctype="multipart/form-data" asp-controller="Course" asp-action="SubmitPeerReview" method="post">
+                                <dl>
+                                    <dd>
+                                        <input type="hidden" asp-for="AssignmentId" value="@Model.AssignmentId" />
+                                        <input asp-for="@Model.FormFile" type="file" />
+                                        <span asp-validation-for="@Model.FormFile"></span>
+                                    </dd>
+                                </dl>
+                                <input class="btn btn-sm btn-primary" type="submit" value="Submit Peer Review" />
+                            </form>
+                        }
+                        else
+                        {
+                            <p>@Model.PeerReviewSubmission.PeerReviewName</p>
+                            <a asp-controller="Course" asp-action="DownloadPeerReview" asp-route-id="@Model.PeerReviewSubmission.PeerReviewId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download</a>
+                            <a asp-controller="Course" asp-action="DeletePeerReview" asp-route-id="@Model.PeerReviewSubmission.PeerReviewId" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Delete</a>
+                        }
+                    }
+                </div>
+
+                <div class="col-md">
+                    <h4 class="fw-light">Peer Review Partner</h4>
+                    @if (Model.PeerReviewPartner == null)
+                    {
+                        <p>You do not have a peer review partner for this class.</p>
+                    }
+                    else
+                    {
+                        if (Model.PartnerPeerReviewSubmission == null)
+                        {
+                            <p>Your partner has not submitted a peer review of your assignment submission yet.</p>
+                        }
+                        else
+                        {
+                            <p>@Model.PartnerPeerReviewSubmission.PeerReviewName</p>
+                            <a asp-controller="Course" asp-action="DownloadPeerReview" asp-route-id="@Model.PartnerPeerReviewSubmission.PeerReviewId" class="btn btn-sm btn-primary"><i class="far fa-arrow-alt-circle-down"></i> Download</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

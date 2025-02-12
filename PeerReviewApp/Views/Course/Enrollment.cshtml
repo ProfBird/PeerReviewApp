@@ -1,0 +1,78 @@
+﻿@model EnrollmentVM
+
+@{
+    ViewData["Title"] = "Enrollment";
+}
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> signInManager;
+<div>
+    <a asp-controller="Course" asp-action="ClassPage" asp-route-id="@Model.Class.ClassId" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+</div>
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light"><strong>Student Enrollment</strong></h4>
+            <h5>@Model.Class.Course.CourseName</h5>
+ 
+            <div class="list-group">
+                <p class="list-group-item-text"><strong>Term: </strong>@Model.Class.Term.TermName</p>
+                <p class="list-group-item-text"><strong>Instructor: </strong>@Model.Class.Instructor.LastName, @Model.Class.Instructor.FirstName</p>
+            </div>
+            
+            <h4>Unenrolled Students</h4>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Enroll</th>
+                        </tr>
+                    </thead>
+                    <form asp-action="Enrollment" method="post">
+                        <input type="hidden" asp-for="@Model.Class.ClassId" />
+                        <tbody>
+                            @foreach (AppUser s in Model.UnenrolledStudents)
+                            {
+                                <tr>
+                                    <td>@s.FirstName @s.LastName (@s.Id)</td>
+                                    <td><button type="submit" name="studentId" value="@s.Id" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Enroll</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </form>
+                </table>
+
+                    <br/>
+                    <h4>Enrolled Students</h4>
+            @if (@Model.Class.Enrollments != null)
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Unenroll</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (@Model.Class.Enrollments.Count != 0)
+                        {
+                             @foreach (Enrollment e in Model.Class.Enrollments)
+                            {
+                                <tr>
+                                    <td>@e.Student.FirstName @e.Student.LastName (@e.Student.Id)</td>
+                                    <td><a asp-controller="Course" asp-action="Unenrollment" asp-route-id="@e.EnrollmentId"><i class="far fa-trash-alt"></i></a></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>There are no students enrolled in this class yet!</td>
+                            </tr>                           
+                        }
+
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

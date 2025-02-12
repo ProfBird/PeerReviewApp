@@ -1,0 +1,23 @@
+﻿@model DepartmentVM
+@{
+    ViewData["Title"] = @ViewBag.Caption + " Department";
+}
+
+<div>
+    <a asp-controller="Institution" asp-action="Edit" asp-route-id="@Model.InstitutionId" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+    <h1>@ViewBag.Caption Department</h1>
+</div>
+
+<form asp-action="CreateDepartment" method="Post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="InstitutionId" />
+    <input type="hidden" asp-for="DepartmentId" />
+
+    <div class="form-group">
+        <label asp-for="DepartmentName"></label>
+        <input asp-for="DepartmentName" class="form-control"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">@ViewBag.Caption</button>
+    <a asp-controller="Institution" asp-action="Edit" asp-route-id="@Model.InstitutionId" class="btn btn-outline-secondary">Cancel</a>
+</form>

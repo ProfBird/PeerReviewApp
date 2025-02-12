@@ -1,0 +1,22 @@
+﻿@model Assignment
+
+@{
+    ViewData["Title"] = "Delete Assignment";
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">Delete Assignment</h4>
+            <h5>Are you sure you would like to delete the Assignment <strong>@Model.AssignmentName</strong>?</h5>
+
+            <form asp-action="DeleteAssignment" method="post">
+                <input type="hidden" asp-for="AssignmentId" />
+                <input type="hidden" asp-for="ClassId"/>
+
+                <button type="submit" class="btn btn-primary">Delete</button>
+                <a asp-controller="Course" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+﻿@model ClassVM
+
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<AppUser> UserManager;
+
+@{
+    ViewData["Title"] = "Class - " + Model.ClassName;
+}
+
+<div>
+    <a asp-controller="Course" asp-action="Index" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+    <h1>@Model.ClassName</h1>
+</div>
+
+@if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+{
+    <div>
+        <a asp-controller="Course" asp-action="CreateAssignment" asp-route-id="@Model.ClassId" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Create Assignment</a>
+        <a asp-controller="Course" asp-action="Enrollment" asp-route-id="@Model.ClassId" class="btn btn-outline-secondary mr-1"><i class="far fa-user"></i> Add Student to Class</a>
+        <a asp-controller="Course" asp-action="PeerReviewSettings" asp-route-id="@Model.ClassId" class="btn btn-outline-secondary mr-1"><i class="fa fa-cog"></i> Peer Review Settings</a>
+       <br>
+    </div>
+
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Peer Review Due Date</th>
+                        <th>Final Due Date</th>
+                        @if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+                        {
+                            <th>Edit</th>
+                            <th>Delete</th>                   
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (@Model.Assignments.Count != 0)
+                    {
+                            @foreach (Assignment asgn in Model.Assignments)
+                        {
+                            <tr onclick="location.href = '@(Url.Action("AssignmentPage", "Course", new { id = @asgn.AssignmentId }))'">
+                                <td>@asgn.AssignmentName</td>
+                                <td>@asgn.PeerReviewDueDate</td>
+                                <td>@asgn.AssignmentDueDate</td>
+                                @if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+                                {
+                                    <td><a asp-controller="Course" asp-action="EditAssignement" asp-route-id="@asgn.AssignmentId"><i class="far fa-edit"></i></a></td>
+                                    <td><a asp-controller="Course" asp-action="DeleteAssignment" asp-route-id="@asgn.AssignmentId"><i class="far fa-trash-alt"></i></a></td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>There are no assignments created for this class yet!</td>
+                        </tr>                           
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

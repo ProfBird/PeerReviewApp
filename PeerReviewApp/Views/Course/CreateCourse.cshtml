@@ -1,0 +1,61 @@
+﻿@model CreateCourseVM
+
+@{
+    ViewData["Title"] = "Create New Course";
+}
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> signInManager;
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">Create New Course</h4>
+
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="CourseId" />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                @*-----------------Course Name-----------------*@
+                <div class="form-group">
+                    <label asp-for="CourseName">Course Name: </label>
+                    <input asp-for="CourseName" class="form-control">
+                </div>
+
+                @*----------------Institutions----------------*@
+                <div class="form-group">
+                    <label asp-for="Institution.InstitutionId">Institution: </label>
+                    <select name="Institution.InstitutionId">
+                        @if (@Model.Institutions != null)
+                        {
+                            @foreach (Institution inst in Model.Institutions)
+                            {
+                                <option value=@inst.InstitutionId>@inst.InstitutionName</option>
+                            }                            
+                        }
+                    </select>
+                    <span asp-validation-for="Institution" class="text-danger"></span>
+                </div>
+
+                @*-----------------Department-----------------*@
+                <div class="form-group">
+                    <label asp-for="Department.DepartmentId">Department: </label>
+                    <select name="Department.DepartmentId">
+                        @if (@Model.Departments != null)
+                        {
+                            @foreach (Department dept in Model.Departments)
+                            {
+                                <option value=@dept.DepartmentId>@dept.DepartmentName</option>
+                            }                            
+                        }
+                    </select>
+                    <span asp-validation-for="Department" class="text-danger"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a asp-controller="Course" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
