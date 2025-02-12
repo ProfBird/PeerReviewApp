@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PeerReviewApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d51319076e223455a24234f353e0b072fc6ad915")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+99044c6e4825ce340536506b95e145f32736ae66")]
 [assembly: System.Reflection.AssemblyProductAttribute("PeerReviewApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PeerReviewApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

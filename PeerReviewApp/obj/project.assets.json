@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net5.0": {
+    "net6.0": {
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
@@ -8256,7 +8256,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net5.0": [
+    "net6.0": [
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 5.0.15",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 5.0.15",
       "Microsoft.AspNetCore.Identity.UI >= 5.0.15",
@@ -8274,11 +8274,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/birdb/Projects/peer-review-app/PeerReviewApp/PeerReviewApp/PeerReviewApp.csproj",
+      "projectUniqueName": "/Users/birdb/Projects/PeerReviewApp/PeerReviewApp/PeerReviewApp.csproj",
       "projectName": "PeerReviewApp",
-      "projectPath": "/Users/birdb/Projects/peer-review-app/PeerReviewApp/PeerReviewApp/PeerReviewApp.csproj",
+      "projectPath": "/Users/birdb/Projects/PeerReviewApp/PeerReviewApp/PeerReviewApp.csproj",
       "packagesPath": "/Users/birdb/.nuget/packages/",
-      "outputPath": "/Users/birdb/Projects/peer-review-app/PeerReviewApp/PeerReviewApp/obj/",
+      "outputPath": "/Users/birdb/Projects/PeerReviewApp/PeerReviewApp/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
@@ -8287,15 +8287,15 @@
         "/Users/birdb/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net5.0"
+        "net6.0"
       ],
       "sources": {
         "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "projectReferences": {}
         }
       },
@@ -8311,8 +8311,8 @@
       }
     },
     "frameworks": {
-      "net5.0": {
-        "targetAlias": "net5.0",
+      "net6.0": {
+        "targetAlias": "net6.0",
         "dependencies": {
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
             "target": "Package",
@@ -8361,15 +8361,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[5.0.0, 5.0.0]"
+            "version": "[6.0.28, 6.0.28]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.osx-x64",
-            "version": "[5.0.17, 5.0.17]"
+            "version": "[6.0.28, 6.0.28]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[5.0.0, 5.0.0]"
+            "version": "[6.0.28, 6.0.28]"
           }
         ],
         "frameworkReferences": {
