@@ -1,0 +1,24 @@
+﻿@model Enrollment
+
+@{
+    ViewData["Title"] = "Unenrollment";
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">@Model.Class.ClassName</h4>
+            <h5>Are you sure you would like to unenroll <strong>@Model.Student.FirstName @Model.Student.LastName</strong>?</h5>
+
+            <form asp-action="Unenrollment" method="post">
+                <input type="hidden" asp-for="EnrollmentId" />
+                <input type="hidden" asp-for="Class"/>
+                <input type="hidden" asp-for="ClassId"/>
+
+
+                <button type="submit" class="btn btn-primary">Unenroll</button>
+                <a asp-controller="Course" asp-action="Enrollment" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

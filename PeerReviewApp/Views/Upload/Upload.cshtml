@@ -1,0 +1,21 @@
+﻿@model UploadedFile
+
+@{
+    ViewData["Title"] = "Test Upload Page";
+}
+
+<h1>Upload one buffered file to the server's physical storage</h1>
+<p>The following form's page handler will save the file to the disk</p>
+
+<form enctype="multipart/form-data" method="post">
+    <dl>
+        <dt>
+            <label asp-for="@Model.FormFile"></label>
+        </dt>
+        <dd>
+            <input asp-for="@Model.FormFile" type="file" />
+            <span asp-validation-for="@Model.FormFile"></span>
+        </dd>
+    </dl>
+    <input asp-page-handler="Upload" class="btn" type="submit" value="Upload" />
+</form>

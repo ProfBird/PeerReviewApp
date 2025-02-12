@@ -1,0 +1,63 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = " | Manage User";
+}
+
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<AppUser> UserManager;
+
+<div>
+    <a asp-controller="Admin" asp-action="ManageInstitution" asp-route-id="@Model.User.InstitutionId" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+    <h1>@Model.User.FirstName @Model.User.LastName</h1>
+</div>
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h4 class="fw-light">User Details</h4>
+
+            <p><strong>User Id: </strong>@Model.User.Id</p>
+            <p><strong>User Name: </strong>@Model.User.UserName</p>
+            <p><strong>Email: </strong>@Model.User.Email</p>
+            <p><strong>First Name: </strong>@Model.User.FirstName</p>
+            <p><strong>Last Name: </strong>@Model.User.LastName</p>
+            <p><strong>Roles: </strong>
+                @foreach (string role in Model.User.RoleNames)
+                {
+                    @role;
+                }    
+            </p>
+            
+            <h4 class="fw-light">Classes</h4>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Class</th>
+                        <th>Term</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.User.Classes.Count == 0)
+                    {
+                        <tr>
+                            <th>This user is not enrolled in any classes</th>
+                        </tr>
+                    }
+                    @foreach (Class c in Model.User.Classes)
+                    {
+                        <tr>
+                            <th>@c.ClassId</th>
+                            <th>@c.ClassName</th>
+                            <th>@c.Term.TermName</th>
+                        </tr>                        
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

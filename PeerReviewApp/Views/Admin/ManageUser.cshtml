@@ -1,0 +1,114 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = " | Manage Users";
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h1 class="fw-light">Manage Users</h1>
+            <div class="text-danger">@TempData["extMsg"]</div>
+
+            <h5 class="mt-2"><a asp-action="AddUser">Add a User</a></h5>
+
+            <table class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr><th>Username</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Institution</th><th>Roles</th><th></th><th></th><th></th></tr>
+                </thead>
+                <tbody>
+                    @if (Model.Users.Count() == 0)
+                    {
+                        <tr><td colspan="5">There are no user accounts.</td></tr>
+                    }
+                    else
+                    {
+                        @foreach (AppUser user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>@user.FirstName</td>
+                                <td>@user.LastName</td>
+                                <td>@user.Email</td>
+                                <td>@user.Institution.InstitutionName</td>
+                                <td>
+                                    @foreach (string roleName in user.RoleNames)
+                                    {
+                                        <div>@roleName</div>
+                                    }
+                                </td>
+                                <td>
+                                    <form method="post" asp-action="Delete"
+                                          asp-route-id="@user.Id">
+                                        <button type="submit" class="btn btn-primary">
+                                            Delete User
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" asp-action="AddToAdmin"
+                                          asp-route-id="@user.Id">
+                                        <button type="submit" class="btn btn-primary">
+                                            Add To Admin
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" asp-action="RemoveFromAdmin"
+                                          asp-route-id="@user.Id">
+                                        <button type="submit" class="btn btn-primary">
+                                            Remove From Admin
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <h1 class="fw-light">Manage Roles</h1>
+
+            <h5 class="mt-2"><a asp-action="AddRole">Add a Role</a></h5>
+
+            @if (Model.Roles.Count() == 0)
+            {
+                <form method="post" asp-action="CreateAdminRole">
+                    <button type="submit" class="btn btn-primary">
+                        Create Admin Role
+                    </button>
+                </form>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr><th>Role</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <tr>
+                                <td>@role.Name</td>
+                                <td>
+                                    <form method="post" asp-action="DeleteRole"
+                                          asp-route-id="@role.Id">
+                                        <button type="submit" class="btn btn-primary">
+                                            Delete Role
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

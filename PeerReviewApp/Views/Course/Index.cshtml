@@ -1,0 +1,49 @@
+﻿@model UserCoursesVM
+
+@{
+    ViewData["Title"] = "Course Home";
+}
+
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<AppUser> UserManager;
+
+<div>
+    <h1>Welcome @Model._User.FirstName @Model._User.LastName</h1>
+</div>
+
+@if (User.IsInRole("Instructor") || User.IsInRole("Admin"))
+{
+    <div>
+        <a asp-controller="Course" asp-action="CreateCourse" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Create New Course</a>
+        <a asp-controller="Course" asp-action="CreateClass" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Create New Class</a>
+       <br>
+    </div>
+
+}
+
+<div class="container">
+    <div class="card border-0 shadow my-5">
+        <div class="card-body p-5">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Class Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Class c in Model.Classes)
+                    {
+                        <tr onclick="location.href = '@(Url.Action("ClassPage", "Course", new { id = @c.ClassId }))'">
+                            <td>@c.ClassName</td>
+                                @if (User.IsInRole("Instructor"))
+                                {
+                                    <td><a asp-controller="Course" asp-action="RemoveClass" asp-route-id="@c.ClassId"><i class="far fa-trash-alt"></i></a></td> 
+                                }                               
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

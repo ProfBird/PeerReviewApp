@@ -1,0 +1,180 @@
+﻿@model InstitutionVM
+@{ViewData["Title"]="Edit Institution";}
+
+<div>
+    <a asp-controller="Institution" asp-action="Index" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i> Back</a>
+    <h1>Edit Institution</h1>
+</div>
+
+<form asp-action="Edit" method="Post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="@Model.InstitutionId" />
+
+    <div class="form-group">
+        <label asp-for="InstitutionId">Institution Id</label>
+        <input asp-for="InstitutionId" class="form-control" disabled/>
+    </div>
+    <div class="form-group">
+        <label asp-for="InstitutionName">Institution Name</label>
+        <input asp-for="InstitutionName" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="InstructorCode">Instructor Code</label>
+        <input asp-for="InstructorCode" class="form-control"/>
+    </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-controller="Institution" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+<br />
+    <h4 class="fw-light">Members</h4>
+        <div>
+            <a asp-controller="Account" asp-action="AddUserByInstitution" asp-route-id="@Model.InstitutionId" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Add Member</a>
+            <br />
+        </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>UserName</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Edit</th>
+                <th>Admin Role</th>
+                <th>Instructor Role</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Members.Count == 0)
+            {
+                <tr>
+                    <td colspan="5">No members have been added yet!</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (AppUser user in Model.Members)
+                {
+                    <tr onclick="location.href = '@(Url.Action("UserDetails", "Admin", new { id = @user.Id }))'">
+                        <td>@user.Id</td>
+                        <td>@user.UserName</td>
+                        <td>@user.LastName, @user.FirstName</td>
+                        <td>@user.Email</td>
+                        @if (user.RoleNames != null)
+                        {
+                            <td>
+                                @foreach (String role in user.RoleNames)
+                                {
+                                    @role<text>&nbsp;</text> 
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>None</td>
+                        }
+
+                        <td><a asp-controller="Admin" asp-action="EditUser" asp-route-id="@user.Id"><i class="far fa-edit"></i></a></td>
+                        @if (@user.RoleNames.Contains("Admin"))
+                        {
+                            <td><a asp-controller="Account" asp-action="RemoveFromAdmin" asp-route-id="@user.Id"><i class="fas fa-minus-circle"></i></a></td>                           
+                        }
+                        else
+                        {
+                            <td><a asp-controller="Account" asp-action="AddToAdmin" asp-route-id="@user.Id"><i class="fas fa-plus-circle"></i></a></td> 
+                        }
+                        @if (@user.RoleNames.Contains("Instructor"))
+                        {
+
+                            <td><a asp-controller="Account" asp-action="RemoveFromInstructor" asp-route-id="@user.Id"><i class="fas fa-minus-circle"></i></a></td>
+                        }
+                        else
+                        {
+                            <td><a asp-controller="Account" asp-action="AddToInstructor" asp-route-id="@user.Id"><i class="fas fa-plus-circle"></i></a></td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+<br />
+
+    <h4 class="fw-light">Institution Departments</h4>
+        <div>
+            <a asp-controller="Institution" asp-action="CreateDepartment" asp-route-id="@Model.InstitutionId" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Add Department</a>
+            <br />
+        </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Department Id</th>
+                <th>Department</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Departments.Count == 0)
+            {
+                <tr onclick="location.href = '@(Url.Action("CreateDepartment", "Institution", new { id = @Model.InstitutionId }))'">
+                    <td colspan="5">No departments have been created yet</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (Department dpt in Model.Departments)
+                {
+                    <tr onclick="location.href = '@(Url.Action("Department", "Admin", new { id = @dpt.DepartmentId }))'">
+                        <td>@dpt.DepartmentId</td>
+                        <td>@dpt.DepartmentName</td>
+                        <td><a asp-controller="Institution" asp-action="EditDepartment" asp-route-id="@dpt.DepartmentId"><i class="far fa-edit"></i></a></td>
+                        <td><a asp-controller="Institution" asp-action="DeleteDepartment" asp-route-id="@dpt.DepartmentId"><i class="far fa-trash-alt"></i></a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <h4 class="fw-light">Institution Terms</h4>
+        <div>
+            <a asp-controller="Institution" asp-action="CreateTerm" asp-route-id="@Model.InstitutionId" class="btn btn-outline-secondary mr-1"><i class="fas fa-plus-circle"></i> Add Term</a>
+            <br />
+        </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Term Id</th>
+                <th>Term</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Terms.Count == 0)
+            {
+                <tr onclick="location.href = '@(Url.Action("CreateTerm", "Institution", new { id = @Model.InstitutionId }))'">
+                    <td colspan="5">No terms have been created yet!</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (Term term in Model.Terms)
+                {
+                    <tr onclick="location.href = '@(Url.Action("Term", "Admin", new { id = @term.TermId }))'">
+                        <td>@term.TermId</td>
+                        <td>@term.TermName</td>
+                        <td>@term.TermBeginDate</td>
+                        <td>@term.TermEndDate</td>
+                        <td><a asp-controller="Institution" asp-action="EditTerm" asp-route-id="@term.TermId"><i class="far fa-edit"></i></a></td>
+                        <td><a asp-controller="Institution" asp-action="DeleteTerm" asp-route-id="@term.TermId"><i class="far fa-trash-alt"></i></a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
